@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <title>Find Stop Game!!</title>
+        <script  type="text/javascript" src="phaser.min.js"></script>
+    </head>
+    <body style="margin:0px;">
+        <script>
+            var level = 1;
+            var screenWidth = document.body.clientWidth;
+            var screenHeight = document.body.clientHeight;
+            var normalNodes;
+            var stopNode;
+            var animationTypes = [
+                                    Phaser.Easing.Quadratic.InOut,
+                                    Phaser.Easing.Linear.InOut,
+                                    Phaser.Easing.Cubic.InOut,
+                                    Phaser.Easing.Elastic.InOut,
+                                    Phaser.Easing.Sinusoidal.InOut
+                                 ];
+            
+            var game = new Phaser.Game(screenWidth,screenHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+            function preload() {
+                game.load.image('icon', 'assets/icon.png');
+                game.load.image('icon2', 'assets/icon2.png');
+                game.load.image('background', 'assets/background.jpg');
+
+            }
+
+
+            function create() {
+//                game.stage.backgroundColor = '#1873CE';
+                game.add.image(0,0,'background');
+                if(normalNodes!=null){
+                    normalNodes.removeAll();
+                }
+                normalNodes = game.add.group();
+                
+                createNormalNodes();
+                createStopNode();
+            }
+
+            function update() {
+            }
+            
+            function createNormalNodes(){
+                for(var i =0;i<level*25;i++){
+                    var singleNode = normalNodes.create(game.world.randomX,game.world.randomY, 'icon');
+                    singleNode.animations.add('swim');
+
+                    //  Play the animation at 30fps on a loop
+                    singleNode.animations.play('swim', 30, true);
+
+                    //  Bob the octopus up and down with a tween
+                    game.add.tween(singleNode).to({ y: game.world.randomY,x: game.world.randomX }, getDuration(), animationTypes[Math.random()*10%4], true, 0, -1, true);
+                }
+            }
+            
+            function createStopNode(){
+                 stopNode = game.add.sprite(game.world.randomX,game.world.randomY, 'icon2');
+            }
+            
+            function getDuration(){
+                return Math.random()*10000%3000+3000;
+            }
+        </script>
+    </body>
+    
+    
+</html>
